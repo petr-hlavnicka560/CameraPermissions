@@ -15,8 +15,9 @@ import {
   Alert,
   SafeAreaView,
   StyleSheet,
+  Platform,
 } from 'react-native';
-import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
+import {check, request, RESULTS} from 'react-native-permissions';
 
 class App extends Component {
   state = {
@@ -132,16 +133,13 @@ const styles = StyleSheet.create({
   },
 });
 
-const TEXT_OK = 'Permissions to camera are granted';
-const TEXT_ERROR =
-  'Permissions to camera are not granted, allow please the application to use camera';
-const PERMISSIONS_IOS_CAMERA_REQUEST = 'ios.permission.CAMERA';
-const PERMISSIONS_IOS_CAMERA_RESULT = 'PERMISSIONS.IOS.CAMERA';
+const PERMISSIONS_CAMERA_REQUEST =
+  Platform.OS === 'ios' ? 'ios.permission.CAMERA' : 'android.permission.CAMERA';
 
 async function checkCamera() {
   let result;
   try {
-    result = await check(PERMISSIONS_IOS_CAMERA_REQUEST);
+    result = await check(PERMISSIONS_CAMERA_REQUEST);
   } catch (e) {
     console.log('==========Error during Camera check service: ' + e);
   }
@@ -182,18 +180,12 @@ async function checkCamera() {
 async function requestCamera() {
   let result;
   try {
-    result = await request(PERMISSIONS_IOS_CAMERA_REQUEST);
+    result = await request(PERMISSIONS_CAMERA_REQUEST);
   } catch (e) {
     console.log('==========Error during Camera request service: ' + e);
   }
   console.log('==========result of request: ' + result);
   console.log(result);
-  // switch (result) {
-  //   case PERMISSIONS_IOS_CAMERA_RESULT:
-  //     return 'Camera access allowed.';
-  //   default:
-  //     return 'ERROR - No known code allocated, result: ' + result;
-  // }
 
   return 'result: ' + result;
 }
